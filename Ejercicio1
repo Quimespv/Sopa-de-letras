@@ -2,12 +2,12 @@
 
 // Definición de los posibles valores de orientación
 enum tOrientation {
-    HORITZONTAL, // La palabra está en línea horizontal
-    VERTICAL,    // La palabra está en línea vertical
-    DIAGONAL     // La palabra está en diagonal
+    HORITZONTAL, // La palabra está en linea horizontal, vertical y etc..
+    VERTICAL,   
+    DIAGONAL     
 };
 
-// Estructura para representar la posición de una palabra en la sopa de letras
+// Estructura para representar la posicion de la palabra en la sopa de letras
 struct tPosition {
     int x;  // Coordenada horizontal (columna)
     int y;  // Coordenada vertical (fila)
