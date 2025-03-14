@@ -1,1 +1,81 @@
+#include <stdio.h>
+#include <stdbool.h>
 
+// Definición de los posibles valores de orientación
+typedef enum {
+    HORITZONTAL, // La palabra está en línea horizontal
+    VERTICAL,    // La palabra está en línea vertical
+    DIAGONAL     // La palabra está en diagonal
+} tOrientation;
+
+// Estructura para representar la posición de una palabra en la sopa de letras
+typedef struct {
+    int x;  // Coordenada horizontal (columna)
+    int y;  // Coordenada vertical (fila)
+    tOrientation orientation; // Dirección en la que está colocada la palabra
+} tPosition;
+
+// Estructura para representar una palabra en la sopa de letras
+typedef struct {
+    char word[16]; // Máximo 15 caracteres + terminador nulo
+    bool found;    // Indica si la palabra ha sido encontrada en el juego
+    tPosition position; // Ubicación y orientación de la palabra en la sopa
+} tWord;
+
+// Definición de los posibles estados de la sopa de letras
+typedef enum {
+    EMPTY,          // La sopa está vacía
+    RANDOM_FILLED,  // La sopa está llena de letras aleatorias
+    WORDS_PLACED    // La sopa ya contiene las palabras a buscar
+} tSoupState;
+
+// Estructura para representar la sopa de letras
+typedef struct {
+    char grid[50][50]; // Matriz de caracteres que representa la sopa
+    int rows;          // Número de filas de la sopa
+    int cols;          // Número de columnas de la sopa
+    tSoupState state;  // Estado actual de la sopa de letras
+} tSoup;
+
+// Estructura para almacenar las palabras que deben buscarse en la sopa
+typedef struct {
+    tWord words[15]; // Máximo 15 palabras en la lista de búsqueda
+    int count;       // Número actual de palabras a buscar
+} tSearch;
+
+// Estructura que representa el juego completo
+typedef struct {
+    tSoup soup;   // La sopa de letras
+    tSearch search; // Lista de palabras a buscar
+} tGame;
+
+int main() {
+    // Inicialización de la estructura del juego
+    tGame game;
+    game.soup.rows = 15; // Definir tamaño inicial de la sopa
+    game.soup.cols = 15;
+    game.soup.state = EMPTY; // Inicialmente la sopa está vacía
+    game.search.count = 0; // No hay palabras en la lista de búsqueda aún
+
+    // Ejemplo de inicialización de una palabra
+    tWord exampleWord;
+    exampleWord.found = false;  // La palabra aún no ha sido encontrada
+    exampleWord.position.x = 3; // Colocada en la columna 3
+    exampleWord.position.y = 5; // Colocada en la fila 5
+    exampleWord.position.orientation = HORITZONTAL; // Orientación horizontal
+
+    // Imprimir la información de la palabra de ejemplo
+    printf("Palabra de ejemplo:\n");
+    printf("Posición: (%d, %d)\n", exampleWord.position.x, exampleWord.position.y);
+    
+    // Mostrar la orientación en texto
+    if (exampleWord.position.orientation == HORITZONTAL)
+        printf("Orientación: Horizontal\n");
+    else if (exampleWord.position.orientation == VERTICAL)
+        printf("Orientación: Vertical\n");
+    else
+        printf("Orientación: Diagonal\n");
+
+    printf("Estructuras de datos inicializadas correctamente.\n");
+    return 0;
+}
