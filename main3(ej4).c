@@ -12,15 +12,15 @@ typedef enum {
 
 // Definició de la posició d'una paraula
 typedef struct {
-    int x; // Coordenada horitzontal
-    int y; // Coordenada vertical
+    int x;
+    int y;
     tOrientation orientacio;
 } tPosition;
 
 // Definició d'una paraula dins la sopa de lletres
 typedef struct {
-    char text[16]; // Fins a 15 caràcters + '\0'
-    int trobada;   // 1 si ha estat trobada, 0 si no
+    char text[16];
+    int trobada;
     tPosition posicio;
 } tWord;
 
@@ -32,7 +32,7 @@ typedef enum {
 } tSoupState;
 
 typedef struct {
-    char grid[50][50]; // Mida màxima de 50x50
+    char grid[50][50];
     int files;
     int columnes;
     tSoupState estat;
@@ -40,7 +40,7 @@ typedef struct {
 
 // Definició de la llista de paraules a buscar
 typedef struct {
-    tWord paraules[15]; // Fins a 15 paraules
+    tWord paraules[15];
     int numParaules;
 } tSearch;
 
@@ -51,19 +51,24 @@ typedef struct {
 } tGame;
 
 // Declaració de funcions
-void reverseWord(char *word);
+char getCharacter(tSoup sopa, int fila, int columna);
+void setCharacter(tSoup *sopa, int fila, int columna, char caracter);
+void setWord(tSoup *sopa, tWord *paraula, tPosition posicio, tOrientation orientacio);
+tWord readWord();
+void reverseWord(char *word); //afegim reverseWord
 char getRandomCharacter();
 void fillWithRandomCharacters(int n, int m, tSoup *soup);
 void writeSoup(int n, int m, tSoup *soup);
-void hideWordIntoSoup(tWord word, int n, int m, tSoup *soup);
+void hideWordIntoSoup(tSearch *search, int wordIndex, int n, int m, tSoup *soup);
 void addWordToSearch(tSearch *search, tWord word);
 void initSearch(tSearch *search);
 void initSoup(int n, int m, tSoup *soup);
 
-// implementacio de la funció que inverteix una paraula
+// Implementació de la funció que inverteix una paraula
 void reverseWord(char *word) {
     int len = strlen(word);
-    for (int i = 0; i < len / 2; i++) {
+    int i;
+    for (i = 0; i < len / 2; i++) {
         char temp = word[i];
         word[i] = word[len - i - 1];
         word[len - i - 1] = temp;
@@ -76,50 +81,52 @@ char getRandomCharacter() {
 }
 
 void fillWithRandomCharacters(int n, int m, tSoup *soup) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    int i, j;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
             soup->grid[i][j] = getRandomCharacter();
         }
     }
 }
 
 void writeSoup(int n, int m, tSoup *soup) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    int i, j;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < m; j++) {
             printf("%c ", soup->grid[i][j]);
         }
         printf("\n");
     }
 }
 
-void hideWordIntoSoup(tWord word, int n, int m, tSoup *soup) {
-    int len = strlen(word.text);
-    int ori = rand() % 3; //orientacio aleatoria
-    int reverse = rand() % 2; //50 de probabilitat que s'inverteixi
+void hideWordIntoSoup(tSearch *search, int wordIndex, int n, int m, tSoup *soup) {
+    tWord *word = &search->paraules[wordIndex];
+    int len = strlen(word->text);
+    int ori = rand() % 3;
+    int reverse = rand() % 2;
+    int i, j, k;
 
     if (reverse) {
-        reverseWord(word.text);
+        reverseWord(word->text);
     }
 
-    int i, j;
-
-    if (ori == 0) { // VERTICAL
+    if (ori == 0) {
         i = rand() % (n - len + 1);
         j = rand() % m;
-        for (int k = 0; k < len; k++) {
-            soup->grid[i + k][j] = word.text[k];
+        for (k = 0; k < len; k++) {
+            soup->grid[i + k][j] = word->text[k];
         }
-    } else if (ori == 1) { // HORIZONTAL
+    } else if (ori == 1) {
         i = rand() % n;
         j = rand() % (m - len + 1);
-        for (int k = 0; k < len; k++) {
-            soup->grid[i][j + k] = word.text[k];
+        for (k = 0; k < len; k++) {
+            soup->grid[i][j + k] = word->text[k];
         }
-    } else { // DIAGONAL
+    } else {
         i = rand() % (n - len + 1);
         j = rand() % (m - len + 1);
-        for (int k = 0; k < len; k++) {
-            soup->grid[i + k][j + k] = word.text[k];
+        for (k = 0; k < len; k++) {
+            soup->grid[i + k][j + k] = word->text[k];
         }
     }
 }
@@ -143,7 +150,7 @@ void initSoup(int n, int m, tSoup *soup) {
 int main() {
     srand(time(NULL));
     tGame partida;
-    int n, m, w;
+    int n, m, w, i;
     
     printf("Introdueix dimensions de la sopa (N M): ");
     scanf("%d %d", &n, &m);
@@ -155,15 +162,14 @@ int main() {
     printf("Introdueix el nombre de paraules: ");
     scanf("%d", &w);
     
-    for (int i = 0; i < w; i++) {
+    for (i = 0; i < w; i++) {
         tWord word;
         printf("Introdueix la paraula %d: ", i + 1);
         scanf("%s", word.text);
         addWordToSearch(&partida.cerca, word);
-        hideWordIntoSoup(word, n, m, &partida.sopa);
+        hideWordIntoSoup(&partida.cerca, i, n, m, &partida.sopa);
     }
     
     writeSoup(n, m, &partida.sopa);
     return 0;
 }
-
