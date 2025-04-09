@@ -2,28 +2,28 @@
 #include <stdlib.h>
 #include <time.h>
 
-// DefiniciÛ de l'orientaciÛ de les paraules
+// Definici√≥ de l'orientaci√≥ de les paraules
 typedef enum {
     HORITZONTAL,
     VERTICAL,
     DIAGONAL
 } tOrientation;
 
-// DefiniciÛ de la posiciÛ d'una paraula
+// Definici√≥ de la posici√≥ d'una paraula
 typedef struct {
     int x; // Coordenada horitzontal
     int y; // Coordenada vertical
     tOrientation orientacio;
 } tPosition;
 
-// DefiniciÛ d'una paraula dins la sopa de lletres
+// Definici√≥ d'una paraula dins la sopa de lletres
 typedef struct {
-    char text[16]; // Fins a 15 car‡cters + '\0'
+    char text[16]; // Fins a 15 car√†cters + '\0'
     int trobada;   // 1 si ha estat trobada, 0 si no
     tPosition posicio;
 } tWord;
 
-// DefiniciÛ de la sopa de lletres
+// Definici√≥ de la sopa de lletres
 typedef enum {
     BUIDA,
     ALEATORIA,
@@ -31,25 +31,25 @@ typedef enum {
 } tSoupState;
 
 typedef struct {
-    char grid[50][50]; // Mida m‡xima de 50x50
+    char grid[50][50]; // Mida m√†xima de 50x50
     int files;
     int columnes;
     tSoupState estat;
 } tSoup;
 
-// DefiniciÛ de la llista de paraules a buscar
+// Definici√≥ de la llista de paraules a buscar
 typedef struct {
     tWord paraules[15]; // Fins a 15 paraules
     int numParaules;
 } tSearch;
 
-// DefiniciÛ del joc de sopa de lletres
+// Definici√≥ del joc de sopa de lletres
 typedef struct {
     tSoup sopa;
     tSearch cerca;
 } tGame;
 
-// DeclaraciÛ de funcions
+// Declaraci√≥ de funcions
 char getCharacter(tSoup sopa, int fila, int columna);
 void setCharacter(tSoup *sopa, int fila, int columna, char caracter);
 void setWord(tSoup *sopa, tWord *paraula, tPosition posicio, tOrientation orientacio);
@@ -62,7 +62,7 @@ void hideWordIntoSoup(tWord word, int n, int m, tSoup *soup);
 void addWordToSearch(tSearch *search, tWord word);
 void initSearch(tSearch *search);
 
-// ImplementaciÛ de funcions
+// Implementaci√≥ de funcions
 char getRandomCharacter() {
     return 'A' + (rand() % 26);
 }
