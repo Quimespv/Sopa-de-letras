@@ -18,9 +18,9 @@ char getRandomCharacter() {
 
 void fillWithRandomCharacters(tSoup *soup) {
     int i, j;
-    for (i = 0; i < soup->files; i++) {
-        for (j = 0; j < soup->columnes; j++) {
-            soup->grid[i][j] = getRandomCharacter();
+    for (i = 0; i < (*soup).files; i++) {
+        for (j = 0; j < (*soup).columnes; j++) {
+            (*soup).grid[i][j] = getRandomCharacter();
         }
     }
 }
@@ -43,22 +43,22 @@ void hideWord(tSoup *soup, char *word) {
     }
     
     if (ori == 0) { // Horizontal
-        i = rand() % soup->files;
-        j = rand() % (soup->columnes - len + 1);
+        i = rand() % (*soup).files;
+        j = rand() % ((*soup).columnes - len + 1);
         for (k = 0; k < len; k++) {
-            soup->grid[i][j + k] = tempWord[k];
+            (*soup).grid[i][j + k] = tempWord[k];
         }
     } else if (ori == 1) { // Vertical
-        i = rand() % (soup->files - len + 1);
-        j = rand() % soup->columnes;
+        i = rand() % ((*soup).files - len + 1);
+        j = rand() % (*soup).columnes;
         for (k = 0; k < len; k++) {
-            soup->grid[i + k][j] = tempWord[k];
+            (*soup).grid[i + k][j] = tempWord[k];
         }
     } else { // Diagonal
-        i = rand() % (soup->files - len + 1);
-        j = rand() % (soup->columnes - len + 1);
+        i = rand() % ((*soup).files - len + 1);
+        j = rand() % ((*soup).columnes - len + 1);
         for (k = 0; k < len; k++) {
-            soup->grid[i + k][j + k] = tempWord[k];
+            (*soup).grid[i + k][j + k] = tempWord[k];
         }
     }
     
@@ -191,7 +191,7 @@ int main() {
     // Mostrar las palabras encontradas
     if (numFoundWords > 0) {
         printf("\nSolucio:\n");
-        printf("Les paraules trobades son:\n");
+        printf("Les paraules trobades són:\n");
         for (i = 0; i < numFoundWords; i++) {
             printf("La paraula era: %s\n", foundWords[i]);
         }
