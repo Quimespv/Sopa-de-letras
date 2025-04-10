@@ -80,19 +80,6 @@ int isUpperCaseLetter(char c) {
     return c >= 'A' && c <= 'Z';
 }
 
-void initOutputSoup(tSoup *soup, tSoup *outputSoup) {
-    int i, j;
-    
-    outputSoup->files = soup->files;
-    outputSoup->columnes = soup->columnes;
-    
-    for (i = 0; i < soup->files; i++) {
-        for (j = 0; j < soup->columnes; j++) {
-            outputSoup->grid[i][j] = '.';
-        }
-    }
-}
-
 void checkWord(tSoup soup, char *word, int x, int y, int dirX, int dirY, int *found) {
     int i;
     int match = 1;
@@ -138,36 +125,13 @@ void lookForWord(tSoup soup, char *word, int *startX, int *startY, int *dirX, in
     }
 }
 
-void putWord(tSoup *soup, char *word, int startX, int startY, int dirX, int dirY) {
-    int i;
-    int x = startX, y = startY;
-    
-    for (i = 0; i < strlen(word); i++) {
-        soup->grid[x][y] = word[i];
-        x += dirX;
-        y += dirY;
-    }
-}
-
-void writeOutputSoup(tSoup soup) {
-    int i, j;
-    
-    printf("\nSolucio:\n");
-    printf("%d %d\n", soup.files, soup.columnes);
-    
-    for (i = 0; i < soup.files; i++) {
-        for (j = 0; j < soup.columnes; j++) {
-            printf("%c ", soup.grid[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 int main() {
     srand(time(NULL));
-    tSoup soup, outputSoup;
+    tSoup soup;
     int numWords, i, j;
     char word[16];
+    char foundWords[100][16]; // Array para almacenar palabras encontradas
+    int numFoundWords = 0;    // Contador de palabras encontradas
     
     // Crear la sopa de lletres
     printf("Introdueix dimensions de la sopa (N M): ");
@@ -196,9 +160,6 @@ int main() {
     printf("\nSopa de lletres:\n");
     writeSoup(soup);
     
-    // Inicialitzar la sopa de sortida
-    initOutputSoup(&soup, &outputSoup);
-    
     // Demanar paraules per buscar
     printf("\nIntrodueix el nombre de paraules a buscar: ");
     scanf("%d", &numWords);
@@ -219,14 +180,24 @@ int main() {
         
         if (found) {
             printf("Paraula '%s' trobada\n", word);
-            putWord(&outputSoup, word, startX, startY, dirX, dirY);
+            // Guardar la palabra encontrada en el array
+            strcpy(foundWords[numFoundWords], word);
+            numFoundWords++;
         } else {
             printf("Paraula '%s' no trobada.\n", word);
         }
     }
     
-    // Mostrar la solució
-    writeOutputSoup(outputSoup);
+    // Mostrar las palabras encontradas
+    if (numFoundWords > 0) {
+        printf("\nSolucio:\n");
+        printf("Les paraules trobades son:\n");
+        for (i = 0; i < numFoundWords; i++) {
+            printf("La paraula era: %s\n", foundWords[i]);
+        }
+    } else {
+        printf("\nNo s'ha trobat cap paraula.\n");
+    }
     
     return 0;
 }
